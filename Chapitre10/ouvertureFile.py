@@ -1,0 +1,9 @@
+from PyQt6.QtWidgets import QApplication, QFileDialog                                                                                                                                                                                         
+                                                                                                                                                                                                                                              
+app = QApplication([])                                                                                                                                                                                                                        
+filename, _ = QFileDialog.getOpenFileName(None, "Ouvrir un fichier", "", "Fichiers texte (*.txt)")                                                                                                                                            
+                                                                                                                                                                                                                                              
+if filename:                                                                                                                                                                                                                                  
+    with open(filename, 'r') as f:                                                                                                                                                                                                            
+        content = f.read()                                                                                                                                                                                                                    
+        print(content)                                   

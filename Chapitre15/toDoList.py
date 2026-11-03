@@ -1,5 +1,7 @@
-import sys                                                                                                                                                                                                                                    
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QListWidget                                                                                                                 
+# Developer: Hamdy Abou El Anein
+# Contact: hamdy.aea@protonmail.com
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QListWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -33,7 +35,7 @@ class MainWindow(QMainWindow):
         self.add_button.clicked.connect(self.add_task)
 
     def add_task(self):
-        task = self.task_input.text()
+        task = self.task_input.text().strip()
         if task:
             self.task_list.addItem(task)
             self.task_input.clear()

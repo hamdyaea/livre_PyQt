@@ -1,3 +1,5 @@
+# Developer: Hamdy Abou El Anein
+# Contact: hamdy.aea@protonmail.com
 import sys
 import time
 from PyQt6.QtCore import QThread, Qt
@@ -11,6 +13,8 @@ class MonThread(QThread):
     def run(self):
         # Tâche effectuée dans le thread
         for i in range(1, 11):
+            if self.isInterruptionRequested():
+                break
             print(f"Compteur : {i}")
             time.sleep(1)
 
@@ -38,6 +42,11 @@ class MainWindow(QWidget):
         self.mon_thread = MonThread()
         self.mon_thread.finished.connect(self.thread_termine)
 
+    def closeEvent(self, event):
+        self.mon_thread.requestInterruption()
+        self.mon_thread.wait(1500)
+        event.accept()
+
     def lancer_thread(self):
         if not self.mon_thread.isRunning():
             self.mon_thread.start()
@@ -53,6 +62,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())                                                                                                                                                                                                              
-                                                                                                                                                                                                                                       
-                                         
+    sys.exit(app.exec())
+
+

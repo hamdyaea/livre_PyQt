@@ -1,3 +1,5 @@
+# Developer: Hamdy Abou El Anein
+# Contact: hamdy.aea@protonmail.com
 import sys
 import time
 from PyQt6.QtCore import Qt, QObject, QThread, pyqtSignal
@@ -9,6 +11,8 @@ class Worker(QObject):
 
     def run(self):
         for i in range(1, 101):
+            if QThread.currentThread().isInterruptionRequested():
+                break
             time.sleep(0.1)
             self.progress.emit(i)
         self.finished.emit()
@@ -43,7 +47,13 @@ class MyWidget(QWidget):
 
         # Configuration du thread pour exécuter le worker
         self.thread.started.connect(self.worker.run)
-        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.finished.connect(lambda: self.button.setEnabled(True))
+
+    def closeEvent(self, event):
+        self.thread.requestInterruption()
+        self.thread.quit()
+        self.thread.wait(1500)
+        event.accept()
 
     def start_thread(self):
         self.button.setDisabled(True) # désactiver le bouton pour éviter le démarrage multiple du thread
@@ -54,7 +64,8 @@ class MyWidget(QWidget):
         if value == 100:
             self.button.setEnabled(True) # réactiver le bouton une fois le thread terminé
 
-app = QApplication(sys.argv)
-widget = MyWidget()
-widget.show()
-sys.exit(app.exec())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec())
